@@ -128,7 +128,7 @@ export const TopBar = () => {
         <button
           key={icon.id}
           onClick={() => setSelectedIcon(icon.id)}
-          className={`icon p-3 cursor-pointer ${selectedIcon === icon.id ? 'bg-purple-200 rounded border-r ' : ''}`}
+          className={`icon p-3 cursor-pointer ${selectedIcon === icon.id ? 'bg-purple-200 rounded-md border-r ' : ''}`}
         >
           <span className="relative">
             {icon.jsx}
