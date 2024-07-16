@@ -27,7 +27,7 @@ export const TopBar = () => {
     { id: 3, jsx: (<svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 256 256"
-      className="w-4 h-4"
+      className="w-5 h-4"
     >
       <g
         style={{
@@ -61,7 +61,7 @@ export const TopBar = () => {
         />
       </g>
     </svg>) }, // Diamond
-    { id: 4, jsx: (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-4 h-4">
+    { id: 4, jsx: (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-4">
       <circle cx="12" cy="12" r="10" />
     </svg>) }, // Circle
     { id: 5, jsx: (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.} stroke="currentColor" className="size-5">
@@ -77,7 +77,7 @@ export const TopBar = () => {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      className="w-4 h-4"
+      className="w-5 h-4"
     >
       <path
         strokeLinecap="round"
@@ -92,12 +92,12 @@ export const TopBar = () => {
         d="M11.25 6.75L17.25 12.75"
       />
     </svg>) }, // Pencil
-    { id: 8, jsx: (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.} stroke="currentColor" className="size-5">
+    { id: 8, jsx: (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.} stroke="currentColor" className="w-5 h-5">
       <path strokeLinecap="round" strokeLinejoin="round" d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802" />
     </svg>
     
     ) }, // Academic Cap
-    { id: 9, jsx: (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.25} stroke="currentColor" className="size-4">
+    { id: 9, jsx: (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.25} stroke="currentColor" className="w-5 h-4">
       <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
     </svg>
     ) }, // Photograph
@@ -128,7 +128,7 @@ export const TopBar = () => {
         <button
           key={icon.id}
           onClick={() => setSelectedIcon(icon.id)}
-          className={`icon p-3 cursor-pointer ${selectedIcon === icon.id ? 'bg-purple-200 rounded-md border-r ' : ''}`}
+          className={`icon p-3 cursor-pointer hover:bg-purple-100 hover:rounded-md hover:border-r  ${selectedIcon === icon.id ? 'bg-purple-200 rounded-md border-r ' : ''}`}
         >
           <span className="relative">
             {icon.jsx}
