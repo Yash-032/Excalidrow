@@ -29,7 +29,10 @@ export const StickyFooter = ({ middleRef }) => {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
                 </svg>
             </button>
-            <div className='px-1 py-2 text-xs'>{initial} %</div>
+            <button className='px-1 py-2 text-xs' onClick={() =>{
+              setScale(1)
+              setInitial(100);
+            }}>{initial} %</button>
             <button onClick={zoomIn} className="bg-white-500 text-black px-4 py-2 rounded mr-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-3">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
