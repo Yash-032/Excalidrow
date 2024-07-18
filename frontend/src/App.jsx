@@ -73,7 +73,7 @@ export const App = () => {
   return (
     <div className="flex flex-col h-screen">
       <div className="bg-white-300 p-4">
-        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} />
+        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} circleCreated={circleCreated} setCircleCreated={setCircleCreated}/>
       </div>
       <div id="middle" ref={middleRef} className="bg-white-300 p-4 flex-grow">
       </div>

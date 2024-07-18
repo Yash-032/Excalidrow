@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export const TopBar = ({ selectedIcon, setSelectedIcon }) => {
+export const TopBar = ({ selectedIcon, setSelectedIcon, circleCreated, setCircleCreated }) => {
   
   const icons = [
     { id: 1, jsx: (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4">
@@ -126,7 +126,10 @@ export const TopBar = ({ selectedIcon, setSelectedIcon }) => {
           {icons.map((icon) => (
             <button
               key={icon.id}
-              onClick={() => setSelectedIcon(icon.id)}
+              onClick={() => {
+                setSelectedIcon(icon.id)
+                setCircleCreated(true)
+              }}
               className={`icon p-3 cursor-pointer hover:bg-purple-100 hover:rounded-md hover:border-r  ${selectedIcon === icon.id ? 'bg-purple-200 rounded-md border-r ' : ''}`}
             >
               <span className="relative">
