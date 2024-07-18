@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-export const TopBar = () => {
-  const [selectedIcon, setSelectedIcon] = useState(1);
-
+export const TopBar = ({ selectedIcon, setSelectedIcon }) => {
+  
   const icons = [
     { id: 1, jsx: (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4">
       <path fillRule="evenodd" d="M5.25 6.31v9.44a.75.75 0 0 1-1.5 0V4.5a.75.75 0 0 1 .75-.75h11.25a.75.75 0 0 1 0 1.5H6.31l13.72 13.72a.75.75 0 1 1-1.06 1.06L5.25 6.31Z" clipRule="evenodd" />
@@ -118,30 +117,28 @@ export const TopBar = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [setSelectedIcon]);
 
   return (
     <div className="flex justify-center">
-  <div className="bg-white border-1 rounded-lg py-1 px-1 shadow w-84 h-13">
-    <div className="flex space-x-1">
-      {icons.map((icon) => (
-        <button
-          key={icon.id}
-          onClick={() => setSelectedIcon(icon.id)}
-          className={`icon p-3 cursor-pointer hover:bg-purple-100 hover:rounded-md hover:border-r  ${selectedIcon === icon.id ? 'bg-purple-200 rounded-md border-r ' : ''}`}
-        >
-          <span className="relative">
-            {icon.jsx}
-            <sub className="absolute text-xs -bottom-2 -right-2 text-gray-400">
-              {icon.id}
-            </sub>
-          </span>
-        </button>
-      ))}
+      <div className="bg-white border-1 rounded-lg py-1 px-1 shadow w-84 h-13">
+        <div className="flex space-x-1">
+          {icons.map((icon) => (
+            <button
+              key={icon.id}
+              onClick={() => setSelectedIcon(icon.id)}
+              className={`icon p-3 cursor-pointer hover:bg-purple-100 hover:rounded-md hover:border-r  ${selectedIcon === icon.id ? 'bg-purple-200 rounded-md border-r ' : ''}`}
+            >
+              <span className="relative">
+                {icon.jsx}
+                <sub className="absolute text-xs -bottom-2 -right-2 text-gray-400">
+                  {icon.id}
+                </sub>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
   );
 };
-
