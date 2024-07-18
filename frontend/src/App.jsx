@@ -5,10 +5,12 @@ import { StickyFooter } from './components/StickyFooter';
 export const App = () => {
   const [selectedIcon, setSelectedIcon] = useState(null); 
   const [circleCreated, setCircleCreated] = useState(false);
+  const [arrowcCreated, setArrowCreated] = useState(false)
   const middleRef = useRef(null);
   const stageRef = useRef(null);
   const layerRef = useRef(null);
   const circleRef = useRef(null);
+  const arrowRef = useRef(null);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -36,7 +38,7 @@ export const App = () => {
           x: window.innerWidth / 2,
           y: window.innerHeight / 2,
           radius: 140,
-          fill: 'white',
+          fill: 'transparent',
           stroke: 'black',
           strokeWidth: 2,
           draggable: true,
@@ -49,7 +51,24 @@ export const App = () => {
         setCircleCreated(false)
       }
     }
-  }, [circleCreated, selectedIcon]);
+    if(arrowcCreated && selectedIcon === 5){
+      if(stageRef.current && layerRef.current){
+        const arrow = new Konva.Arrow({
+          points: [50,100,200,100],
+          pointerLength: 15,
+          pointerWidth: 15,
+          fill: 'black',
+          stroke: 'black',
+          strokeWidth: 2,
+          draggable: true,
+        })
+        layerRef.current.add(arrow)
+        layerRef.current.draw()
+        arrowRef.current = arrow
+        setArrowCreated(false)
+      }
+    }
+  }, [circleCreated, selectedIcon, arrowcCreated]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -60,6 +79,9 @@ export const App = () => {
 
         if (id === 4) {
           setCircleCreated(true);
+        }
+        else if(id === 5){
+          setArrowCreated(true)
         }
       }
     };
@@ -73,7 +95,7 @@ export const App = () => {
   return (
     <div className="flex flex-col h-screen">
       <div className="bg-white-300 p-4">
-        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} circleCreated={circleCreated} setCircleCreated={setCircleCreated}/>
+        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated}/>
       </div>
       <div id="middle" ref={middleRef} className="bg-white-300 p-4 flex-grow">
       </div>
