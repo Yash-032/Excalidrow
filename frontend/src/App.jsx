@@ -6,11 +6,13 @@ export const App = () => {
   const [selectedIcon, setSelectedIcon] = useState(null); 
   const [circleCreated, setCircleCreated] = useState(false);
   const [arrowcCreated, setArrowCreated] = useState(false)
+  const [rectangleCreated, setRectangleCreated] = useState(false)
   const middleRef = useRef(null);
   const stageRef = useRef(null);
   const layerRef = useRef(null);
   const circleRef = useRef(null);
   const arrowRef = useRef(null);
+  const rectangleRef = useRef(null)
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -32,6 +34,25 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
+    if(rectangleCreated && selectedIcon === 2){
+      if(stageRef.current && layerRef.current){
+        const rectangle = new Konva.Rect({
+          x: (innerWidth - 200)/2,
+          y: (innerHeight - 100)/2,
+          width: 500,
+          height: 400,
+          fill: 'transparent',
+          stroke: 'black',
+          strokeWidth: 2,
+          draggable: true,
+          cornerRadius: 10,
+        })
+        layerRef.current.add(rectangle)
+        layerRef.current.draw()
+        rectangleRef.current = rectangle
+        setRectangleCreated(false)
+      }
+    }
     if (circleCreated && selectedIcon === 4) {
       if (stageRef.current && layerRef.current) {
         const circle = new Konva.Circle({
@@ -68,7 +89,7 @@ export const App = () => {
         setArrowCreated(false)
       }
     }
-  }, [circleCreated, selectedIcon, arrowcCreated]);
+  }, [circleCreated, selectedIcon, arrowcCreated, rectangleCreated]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -77,7 +98,10 @@ export const App = () => {
         const id = parseInt(key);
         setSelectedIcon(id);
 
-        if (id === 4) {
+        if(id === 2){
+          setRectangleCreated(true)
+        }
+        else if (id === 4) {
           setCircleCreated(true);
         }
         else if(id === 5){
@@ -95,7 +119,7 @@ export const App = () => {
   return (
     <div className="flex flex-col h-screen">
       <div className="bg-white-300 p-4">
-        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated}/>
+        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated} setRectangleCreated={setRectangleCreated}/>
       </div>
       <div id="middle" ref={middleRef} className="bg-white-300 p-4 flex-grow">
       </div>
