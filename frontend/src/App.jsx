@@ -1,20 +1,19 @@
 import { useRef, useState, useEffect } from 'react';
 import { TopBar } from './components/TopBar';
 import { StickyFooter } from './components/StickyFooter';
+import Konva from 'konva';
 
 export const App = () => {
   const [selectedIcon, setSelectedIcon] = useState(null); 
   const [circleCreated, setCircleCreated] = useState(false);
-  const [arrowcCreated, setArrowCreated] = useState(false)
-  const [rectangleCreated, setRectangleCreated] = useState(false)
-  const [lineCreated, setLineCreated] = useState(false)
+  const [arrowCreated, setArrowCreated] = useState(false);
+  const [rectangleCreated, setRectangleCreated] = useState(false);
+  const [lineCreated, setLineCreated] = useState(false);
+  const [selectedShape, setSelectedShape] = useState(null);
   const middleRef = useRef(null);
   const stageRef = useRef(null);
   const layerRef = useRef(null);
-  const circleRef = useRef(null);
-  const arrowRef = useRef(null);
-  const rectangleRef = useRef(null);
-  const lineRef = useRef(null);
+  const transformerRef = useRef(null);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -31,8 +30,45 @@ export const App = () => {
       const layer = new Konva.Layer();
       stage.add(layer);
       layerRef.current = layer;
+
+      const transformer = new Konva.Transformer({
+        ignoreStroke: true,
+      });
+      layer.add(transformer);
+      transformerRef.current = transformer;
     };
     document.body.appendChild(script);
+  }, []);
+
+  const addTransformer = (shape) => {
+    const transformer = transformerRef.current;
+    if (transformer) {
+      transformer.nodes([shape]);
+      transformer.getLayer().batchDraw();
+      shape.on('transform', () => {
+        shape.setAttrs({
+          width: shape.width() * shape.scaleX(),
+          height: shape.height() * shape.scaleY(),
+          scaleX: 1,
+          scaleY: 1,
+        });
+      });
+    }
+  };
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    stage.on('click tap', (e) => {
+      if (e.target === stage) {
+        setSelectedShape(null);
+        transformerRef.current.nodes([]);
+        return;
+      }
+      setSelectedShape(e.target);
+      addTransformer(e.target);
+    });
   }, []);
 
   useEffect(() => {
@@ -41,18 +77,19 @@ export const App = () => {
         const rectangle = new Konva.Rect({
           x: (innerWidth - 200)/2,
           y: (innerHeight - 100)/2,
-          width: 500,
-          height: 400,
+          width: 100,
+          height: 75,
           fill: 'transparent',
           stroke: 'black',
-          strokeWidth: 2,
+          strokeWidth: 1,
           draggable: true,
           cornerRadius: 10,
-        })
-        layerRef.current.add(rectangle)
-        layerRef.current.draw()
-        rectangleRef.current = rectangle
-        setRectangleCreated(false)
+        });
+        layerRef.current.add(rectangle);
+        layerRef.current.draw();
+        setSelectedShape(rectangle);
+        addTransformer(rectangle);
+        setRectangleCreated(false);
       }
     }
     if (circleCreated && selectedIcon === 4) {
@@ -60,7 +97,7 @@ export const App = () => {
         const circle = new Konva.Circle({
           x: window.innerWidth / 2,
           y: window.innerHeight / 2,
-          radius: 140,
+          radius: 70,
           fill: 'transparent',
           stroke: 'black',
           strokeWidth: 2,
@@ -69,12 +106,12 @@ export const App = () => {
 
         layerRef.current.add(circle);
         layerRef.current.draw();
-
-        circleRef.current = circle;
-        setCircleCreated(false)
+        setSelectedShape(circle);
+        addTransformer(circle);
+        setCircleCreated(false);
       }
     }
-    if(arrowcCreated && selectedIcon === 5){
+    if(arrowCreated && selectedIcon === 5){
       if(stageRef.current && layerRef.current){
         const arrow = new Konva.Arrow({
           points: [50,100,200,100],
@@ -84,11 +121,12 @@ export const App = () => {
           stroke: 'black',
           strokeWidth: 2,
           draggable: true,
-        })
-        layerRef.current.add(arrow)
-        layerRef.current.draw()
-        arrowRef.current = arrow
-        setArrowCreated(false)
+        });
+        layerRef.current.add(arrow);
+        layerRef.current.draw();
+        setSelectedShape(arrow);
+        addTransformer(arrow);
+        setArrowCreated(false);
       }
     }
     if(lineCreated && selectedIcon === 6){
@@ -100,14 +138,15 @@ export const App = () => {
           lineCap: 'round',
           lineJoin: 'round',
           draggable: true,
-        })
-        layerRef.current.add(line)
-        layerRef.current.draw()
-        lineRef.current = line
-        setLineCreated(false)
+        });
+        layerRef.current.add(line);
+        layerRef.current.draw();
+        setSelectedShape(line);
+        addTransformer(line);
+        setLineCreated(false);
       }
     }
-  }, [circleCreated, selectedIcon, arrowcCreated, rectangleCreated, lineCreated]);
+  }, [circleCreated, selectedIcon, arrowCreated, rectangleCreated, lineCreated]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -117,16 +156,16 @@ export const App = () => {
         setSelectedIcon(id);
 
         if(id === 2){
-          setRectangleCreated(true)
+          setRectangleCreated(true);
         }
         else if (id === 4) {
           setCircleCreated(true);
         }
         else if(id === 5){
-          setArrowCreated(true)
+          setArrowCreated(true);
         }
-        else if(selectedIcon === 6){
-          setLineCreated(true)
+        else if(id === 6){
+          setLineCreated(true);
         }
       }
     };
