@@ -16,28 +16,22 @@ export const App = () => {
   const transformerRef = useRef(null);
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/gh/konvajs/konva@1.2.2/konva.min.js';
-    script.async = true;
-    script.onload = () => {
-      const stage = new Konva.Stage({
-        container: 'middle',
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-      stageRef.current = stage;
+    const stage = new Konva.Stage({
+      container: middleRef.current,
+      width: window.innerWidth,
+      height: window.innerHeight - 100, // Adjust height to fit the TopBar and StickyFooter
+    });
+    stageRef.current = stage;
 
-      const layer = new Konva.Layer();
-      stage.add(layer);
-      layerRef.current = layer;
+    const layer = new Konva.Layer();
+    stage.add(layer);
+    layerRef.current = layer;
 
-      const transformer = new Konva.Transformer({
-        ignoreStroke: true,
-      });
-      layer.add(transformer);
-      transformerRef.current = transformer;
-    };
-    document.body.appendChild(script);
+    const transformer = new Konva.Transformer({
+      ignoreStroke: true,
+    });
+    layer.add(transformer);
+    transformerRef.current = transformer;
   }, []);
 
   const addTransformer = (shape) => {
@@ -46,12 +40,24 @@ export const App = () => {
       transformer.nodes([shape]);
       transformer.getLayer().batchDraw();
       shape.on('transform', () => {
-        shape.setAttrs({
-          width: shape.width() * shape.scaleX(),
-          height: shape.height() * shape.scaleY(),
-          scaleX: 1,
-          scaleY: 1,
-        });
+        if (shape.className === 'Rect' || shape.className === 'Circle') {
+          shape.setAttrs({
+            width: shape.width() * shape.scaleX(),
+            height: shape.height() * shape.scaleY(),
+            scaleX: 1,
+            scaleY: 1,
+          });
+        } else if (shape.className === 'Arrow' || shape.className === 'Line') {
+          const scaleX = shape.scaleX();
+          const scaleY = shape.scaleY();
+          shape.points(shape.points().map((point, index) => 
+            index % 2 === 0 ? point * scaleX : point * scaleY
+          ));
+          shape.setAttrs({
+            scaleX: 1,
+            scaleY: 1,
+          });
+        }
       });
     }
   };
@@ -72,11 +78,11 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
-    if(rectangleCreated && selectedIcon === 2){
-      if(stageRef.current && layerRef.current){
+    if (rectangleCreated && selectedIcon === 2) {
+      if (stageRef.current && layerRef.current) {
         const rectangle = new Konva.Rect({
-          x: (innerWidth - 200)/2,
-          y: (innerHeight - 100)/2,
+          x: (window.innerWidth - 200) / 2,
+          y: (window.innerHeight - 100) / 2,
           width: 100,
           height: 75,
           fill: 'transparent',
@@ -100,10 +106,9 @@ export const App = () => {
           radius: 70,
           fill: 'transparent',
           stroke: 'black',
-          strokeWidth: 2,
+          strokeWidth: 1,
           draggable: true,
         });
-
         layerRef.current.add(circle);
         layerRef.current.draw();
         setSelectedShape(circle);
@@ -111,15 +116,15 @@ export const App = () => {
         setCircleCreated(false);
       }
     }
-    if(arrowCreated && selectedIcon === 5){
-      if(stageRef.current && layerRef.current){
+    if (arrowCreated && selectedIcon === 5) {
+      if (stageRef.current && layerRef.current) {
         const arrow = new Konva.Arrow({
-          points: [50,100,200,100],
+          points: [50, 100, 200, 100],
           pointerLength: 15,
           pointerWidth: 15,
           fill: 'black',
           stroke: 'black',
-          strokeWidth: 2,
+          strokeWidth: 1,
           draggable: true,
         });
         layerRef.current.add(arrow);
@@ -129,12 +134,12 @@ export const App = () => {
         setArrowCreated(false);
       }
     }
-    if(lineCreated && selectedIcon === 6){
-      if(stageRef.current && layerRef.current){
+    if (lineCreated && selectedIcon === 6) {
+      if (stageRef.current && layerRef.current) {
         const line = new Konva.Line({
           points: [50, 100, 200, 100],
           stroke: 'black',
-          strokeWidth: 2,
+          strokeWidth: 1,
           lineCap: 'round',
           lineJoin: 'round',
           draggable: true,
@@ -155,16 +160,13 @@ export const App = () => {
         const id = parseInt(key);
         setSelectedIcon(id);
 
-        if(id === 2){
+        if (id === 2) {
           setRectangleCreated(true);
-        }
-        else if (id === 4) {
+        } else if (id === 4) {
           setCircleCreated(true);
-        }
-        else if(id === 5){
+        } else if (id === 5) {
           setArrowCreated(true);
-        }
-        else if(id === 6){
+        } else if (id === 6) {
           setLineCreated(true);
         }
       }
@@ -178,13 +180,12 @@ export const App = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="bg-white-300 p-4">
-        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated} setRectangleCreated={setRectangleCreated} setLineCreated={setLineCreated}/>
+      <div className="bg-white p-4">
+        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated} setRectangleCreated={setRectangleCreated} setLineCreated={setLineCreated} />
       </div>
-      <div id="middle" ref={middleRef} className="bg-white-300 p-4 flex-grow">
-      </div>
-      <div className="bg-white-300 p-4 flex-shrink-0">
-        <StickyFooter middleRef={middleRef}/>
+      <div id="middle" ref={middleRef} className="bg-white-100 flex-grow"></div>
+      <div className="bg-white p-4 flex-shrink-0">
+        <StickyFooter middleRef={middleRef} />
       </div>
     </div>
   );
