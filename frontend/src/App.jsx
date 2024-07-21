@@ -9,8 +9,9 @@ export const App = () => {
   const [arrowCreated, setArrowCreated] = useState(false);
   const [rectangleCreated, setRectangleCreated] = useState(false);
   const [lineCreated, setLineCreated] = useState(false);
+  const [triangleCreated, setTriangleCreated] = useState(false);
+  const [textCreated, setTextCreated] = useState(false);
   const [selectedShape, setSelectedShape] = useState(null);
-  const [triangleCreated, setTriangleCreated] = useState(null);
   const middleRef = useRef(null);
   const stageRef = useRef(null);
   const layerRef = useRef(null);
@@ -48,7 +49,7 @@ export const App = () => {
             scaleX: 1,
             scaleY: 1,
           });
-        } else if (shape.className === 'Arrow' || shape.className === 'Line') {
+        } else if (shape.className === 'Arrow' || shape.className === 'Line' || shape.className === 'Text') {
           const scaleX = shape.scaleX();
           const scaleY = shape.scaleY();
           shape.points(shape.points().map((point, index) => 
@@ -97,27 +98,6 @@ export const App = () => {
         setSelectedShape(rectangle);
         addTransformer(rectangle);
         setRectangleCreated(false);
-      }
-    }
-    if(triangleCreated && selectedIcon === 3){
-      if(stageRef.current && layerRef.current){
-        const triangle = new Konva.Line({
-          points:[
-            window.innerWidth / 2, window.innerHeight / 2 - 70,
-            window.innerWidth / 2 - 70, window.innerHeight / 2 + 70,
-            window.innerWidth / 2 + 70, window.innerHeight / 2 +70
-          ],
-          fill: 'transparent',
-          stroke: 'black',
-          strokeWidth: 1,
-          closed: true,
-          draggable: true
-        })
-        layerRef.current.add(triangle);
-        layerRef.current.draw();
-        setSelectedShape(triangle);
-        addTransformer(triangle);
-        setTriangleCreated(false);
       }
     }
     if (circleCreated && selectedIcon === 4) {
@@ -173,7 +153,70 @@ export const App = () => {
         setLineCreated(false);
       }
     }
-  }, [circleCreated, selectedIcon, arrowCreated, rectangleCreated, lineCreated]);
+    if (triangleCreated && selectedIcon === 3) {
+      if (stageRef.current && layerRef.current) {
+        const triangle = new Konva.Line({
+          points: [
+            window.innerWidth / 2, window.innerHeight / 2 - 70,
+            window.innerWidth / 2 - 70, window.innerHeight / 2 + 70,
+            window.innerWidth / 2 + 70, window.innerHeight / 2 + 70
+          ],
+          fill: 'transparent',
+          stroke: 'black',
+          strokeWidth: 1,
+          closed: true,
+          draggable: true,
+        });
+        layerRef.current.add(triangle);
+        layerRef.current.draw();
+        setSelectedShape(triangle);
+        addTransformer(triangle);
+        setTriangleCreated(false);
+      }
+    }
+    if (textCreated && selectedIcon === 8) {
+      if (stageRef.current && layerRef.current) {
+        const textarea = document.createElement('textarea');
+        textarea.style.position = 'absolute';
+        textarea.style.top = `${window.innerHeight / 2}px`;
+        textarea.style.left = `${window.innerWidth / 2}px`;
+        textarea.style.width = '200px';
+        textarea.style.height = '30px';
+        textarea.style.fontSize = '14px';
+        textarea.style.border = '1px solid black'
+        document.body.appendChild(textarea);
+        // textarea.focus();
+
+        textarea.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            const text = new Konva.Text({
+              x: parseInt(textarea.style.left, 10),
+              y: parseInt(textarea.style.top, 10),
+              text: textarea.value,
+              fontSize: 14,
+              fontFamily: 'Arial',
+              fill: 'black',
+              draggable: true,
+            });
+            layerRef.current.add(text);
+            layerRef.current.draw();
+            setSelectedShape(text);
+            addTransformer(text);
+            document.body.removeChild(textarea);
+            setTextCreated(false);
+          }
+          else if(e.key === 'Enter' && e.shiftKey){
+            textarea.value += '\n';
+            e.stopPropagation();
+          }
+          else if(e.key === 'Escape'){
+            document.body.removeChild(textarea)
+            setTextCreated(false)
+          }
+        });
+      }
+    }
+  }, [circleCreated, selectedIcon, arrowCreated, rectangleCreated, lineCreated, triangleCreated, textCreated]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -184,18 +227,16 @@ export const App = () => {
 
         if (id === 2) {
           setRectangleCreated(true);
-        }
-        else if(id === 3){
+        } else if (id === 3) {
           setTriangleCreated(true);
-        } 
-        else if (id === 4) {
+        } else if (id === 4) {
           setCircleCreated(true);
-        }
-        else if (id === 5) {
+        } else if (id === 5) {
           setArrowCreated(true);
-        }
-        else if (id === 6) {
+        } else if (id === 6) {
           setLineCreated(true);
+        } else if (id === 8) {
+          setTextCreated(true);
         }
       }
     };
@@ -209,7 +250,7 @@ export const App = () => {
   return (
     <div className="flex flex-col h-screen">
       <div className="bg-white p-4">
-        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated} setRectangleCreated={setRectangleCreated} setLineCreated={setLineCreated} setTriangleCreated={setTriangleCreated}/>
+        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated} setRectangleCreated={setRectangleCreated} setLineCreated={setLineCreated} setTriangleCreated={setTriangleCreated} setTextCreated={setTextCreated} />
       </div>
       <div id="middle" ref={middleRef} className="bg-white-100 flex-grow"></div>
       <div className="bg-white p-4 flex-shrink-0">
