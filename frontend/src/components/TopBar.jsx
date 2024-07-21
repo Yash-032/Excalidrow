@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export const TopBar = ({ selectedIcon, setSelectedIcon, setCircleCreated, setArrowCreated, setRectangleCreated, setLineCreated }) => {
+export const TopBar = ({ selectedIcon, setSelectedIcon, setCircleCreated, setArrowCreated, setRectangleCreated, setLineCreated, setTriangleCreated }) => {
   
   const icons = [
     { id: 1, jsx: (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4">
@@ -129,6 +129,7 @@ export const TopBar = ({ selectedIcon, setSelectedIcon, setCircleCreated, setArr
               onClick={() => {
                 setSelectedIcon(icon.id)
                 if(selectedIcon === 2) setRectangleCreated(true)
+                else if(selectedIcon === 3) setTriangleCreated(true);
                 else if(selectedIcon === 4)  setCircleCreated(true)
                 else if(selectedIcon === 5) setArrowCreated(true)
                 else if(selectedIcon === 6) setLineCreated(true) 

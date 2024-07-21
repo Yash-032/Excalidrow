@@ -10,6 +10,7 @@ export const App = () => {
   const [rectangleCreated, setRectangleCreated] = useState(false);
   const [lineCreated, setLineCreated] = useState(false);
   const [selectedShape, setSelectedShape] = useState(null);
+  const [triangleCreated, setTriangleCreated] = useState(null);
   const middleRef = useRef(null);
   const stageRef = useRef(null);
   const layerRef = useRef(null);
@@ -98,6 +99,27 @@ export const App = () => {
         setRectangleCreated(false);
       }
     }
+    if(triangleCreated && selectedIcon === 3){
+      if(stageRef.current && layerRef.current){
+        const triangle = new Konva.Line({
+          points:[
+            window.innerWidth / 2, window.innerHeight / 2 - 70,
+            window.innerWidth / 2 - 70, window.innerHeight / 2 + 70,
+            window.innerWidth / 2 + 70, window.innerHeight / 2 +70
+          ],
+          fill: 'transparent',
+          stroke: 'black',
+          strokeWidth: 1,
+          closed: true,
+          draggable: true
+        })
+        layerRef.current.add(triangle);
+        layerRef.current.draw();
+        setSelectedShape(triangle);
+        addTransformer(triangle);
+        setTriangleCreated(false);
+      }
+    }
     if (circleCreated && selectedIcon === 4) {
       if (stageRef.current && layerRef.current) {
         const circle = new Konva.Circle({
@@ -162,11 +184,17 @@ export const App = () => {
 
         if (id === 2) {
           setRectangleCreated(true);
-        } else if (id === 4) {
+        }
+        else if(id === 3){
+          setTriangleCreated(true);
+        } 
+        else if (id === 4) {
           setCircleCreated(true);
-        } else if (id === 5) {
+        }
+        else if (id === 5) {
           setArrowCreated(true);
-        } else if (id === 6) {
+        }
+        else if (id === 6) {
           setLineCreated(true);
         }
       }
@@ -181,7 +209,7 @@ export const App = () => {
   return (
     <div className="flex flex-col h-screen">
       <div className="bg-white p-4">
-        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated} setRectangleCreated={setRectangleCreated} setLineCreated={setLineCreated} />
+        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated} setRectangleCreated={setRectangleCreated} setLineCreated={setLineCreated} setTriangleCreated={setTriangleCreated}/>
       </div>
       <div id="middle" ref={middleRef} className="bg-white-100 flex-grow"></div>
       <div className="bg-white p-4 flex-shrink-0">
