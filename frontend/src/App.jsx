@@ -19,7 +19,7 @@ export const App = () => {
     const stage = new Konva.Stage({
       container: middleRef.current,
       width: window.innerWidth,
-      height: window.innerHeight - 100, // Adjust height to fit the TopBar and StickyFooter
+      height: window.innerHeight - 100,
     });
     stageRef.current = stage;
 
