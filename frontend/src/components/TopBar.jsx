@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export const TopBar = ({ selectedIcon, setSelectedIcon, setCircleCreated, setArrowCreated, setRectangleCreated, setLineCreated, setTriangleCreated, setTextCreated }) => {
+export const TopBar = ({ selectedIcon, setSelectedIcon, setCircleCreated, setArrowCreated, setRectangleCreated, setLineCreated, setTriangleCreated, setTextCreated, setImageCreated }) => {
   
   const icons = [
     { id: 1, jsx: (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-4">
@@ -134,6 +134,7 @@ export const TopBar = ({ selectedIcon, setSelectedIcon, setCircleCreated, setArr
                 else if(selectedIcon === 5) setArrowCreated(true)
                 else if(selectedIcon === 6) setLineCreated(true) 
                 else if(selectedIcon === 8) setTextCreated(true)
+                else if(selectedIcon === 9) setImageCreated(true);
               }}
               className={`icon p-3 cursor-pointer hover:bg-purple-100 hover:rounded-md hover:border-r  ${selectedIcon === icon.id ? 'bg-purple-200 rounded-md border-r ' : ''}`}
             >

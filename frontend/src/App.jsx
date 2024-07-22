@@ -11,6 +11,7 @@ export const App = () => {
   const [lineCreated, setLineCreated] = useState(false);
   const [triangleCreated, setTriangleCreated] = useState(false);
   const [textCreated, setTextCreated] = useState(false);
+  const [imageCreated, setImageCreated] = useState(false);
   const [selectedShape, setSelectedShape] = useState(null);
   const middleRef = useRef(null);
   const stageRef = useRef(null);
@@ -78,6 +79,46 @@ export const App = () => {
       addTransformer(e.target);
     });
   }, []);
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const imageObj = new Image();
+      imageObj.src = reader.result;
+
+      imageObj.onload = () => {
+        const maxWidth = 500;
+        const maxHeight = 500;
+        let width = imageObj.width;
+        let height = imageObj.height;
+
+        if (width > maxWidth || height > maxHeight) {
+          const scale = Math.min(maxWidth / width, maxHeight / height);
+          width = width * scale;
+          height = height * scale;
+        }
+
+        const konvaImage = new Konva.Image({
+          image: imageObj,
+          x: stageRef.current.width() / 2 - width / 2,
+          y: stageRef.current.height() / 2 - height / 2,
+          width: width,
+          height: height,
+          draggable: true,
+        });
+
+        layerRef.current.add(konvaImage);
+        layerRef.current.draw();
+        setSelectedShape(konvaImage);
+        addTransformer(konvaImage);
+        setImageCreated(false);
+      };
+    };
+
+    reader.readAsDataURL(file);
+  };
 
   useEffect(() => {
     if (rectangleCreated && selectedIcon === 2) {
@@ -185,7 +226,6 @@ export const App = () => {
         textarea.style.fontSize = '14px';
         textarea.style.border = '1px solid black'
         document.body.appendChild(textarea);
-        // textarea.focus();
 
         textarea.addEventListener('keydown', function (e) {
           if (e.key === 'Enter' && !e.shiftKey) {
@@ -216,7 +256,10 @@ export const App = () => {
         });
       }
     }
-  }, [circleCreated, selectedIcon, arrowCreated, rectangleCreated, lineCreated, triangleCreated, textCreated]);
+    if (imageCreated && selectedIcon === 9) {
+      document.getElementById('fileInput').click();
+    }
+  }, [circleCreated, selectedIcon, arrowCreated, rectangleCreated, lineCreated, triangleCreated, textCreated, imageCreated]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -237,6 +280,8 @@ export const App = () => {
           setLineCreated(true);
         } else if (id === 8) {
           setTextCreated(true);
+        } else if (id === 9) {
+          setImageCreated(true);
         }
       }
     };
@@ -250,12 +295,18 @@ export const App = () => {
   return (
     <div className="flex flex-col h-screen">
       <div className="bg-white p-4">
-        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated} setRectangleCreated={setRectangleCreated} setLineCreated={setLineCreated} setTriangleCreated={setTriangleCreated} setTextCreated={setTextCreated} />
+        <TopBar selectedIcon={selectedIcon} setSelectedIcon={setSelectedIcon} setCircleCreated={setCircleCreated} setArrowCreated={setArrowCreated} setRectangleCreated={setRectangleCreated} setLineCreated={setLineCreated} setTriangleCreated={setTriangleCreated} setTextCreated={setTextCreated} setImageCreated={setImageCreated}/>
       </div>
       <div id="middle" ref={middleRef} className="bg-white-100 flex-grow"></div>
       <div className="bg-white p-4 flex-shrink-0">
         <StickyFooter middleRef={middleRef} />
       </div>
+      <input
+        type="file"
+        id="fileInput"
+        style={{ display: 'none' }}
+        onChange={handleImageUpload}
+      />
     </div>
   );
 };
