@@ -69,16 +69,25 @@ export const App = () => {
     const stage = stageRef.current;
     if (!stage) return;
 
-    stage.on('click tap', (e) => {
+    const handleClick = (e) => {
       if (e.target === stage) {
         setSelectedShape(null);
         transformerRef.current.nodes([]);
         return;
       }
+      if(selectedIcon === 0){
+        e.target.destroy();
+        layerRef.current.draw();
+        return ;
+      }
       setSelectedShape(e.target);
       addTransformer(e.target);
-    });
-  }, []);
+    }
+      stage.on('click tap', handleClick);
+      return () => {
+        stage.off('click tap', handleClick)
+      }
+  }, [selectedIcon]);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
